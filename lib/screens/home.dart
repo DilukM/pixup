@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pixup/services/api_service.dart';
 import 'package:provider/provider.dart';
 import 'package:pixup/widgets/movieCard.dart';
+import 'package:pixup/widgets/search_bar.dart';
 import '../providers/movie_provider.dart';
 import 'details_screen.dart';
 
@@ -27,7 +28,25 @@ class _SearchScreenState extends State<SearchScreen> {
       ),
       body: Column(
         children: [
-        
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: CustomSearchBar(
+                    onSearch: (query) {
+                      context
+                          .read<MovieProvider>()
+                          .searchMovies(query);
+                    },
+                  ),
+                ),
+              ),
+           
+            ],
+          ),
          
           Expanded(
             child: Consumer<MovieProvider>(

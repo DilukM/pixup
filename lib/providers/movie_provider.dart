@@ -30,14 +30,18 @@ class MovieProvider with ChangeNotifier {
   String get error => _error;
 
   Future<void> searchMovies(String query) async {
-
+    if (query.isEmpty) {
+      _movies = await _apiService.getAllMovies();
+      notifyListeners();
+      return;
+    }
 
     _isLoading = true;
     _error = '';
     notifyListeners();
 
     try {
-      _movies = await _apiService.getAllMovies();
+      _movies = await _apiService.searchMovies(query);
     } catch (e) {
       _error = e.toString();
       _movies = [];
