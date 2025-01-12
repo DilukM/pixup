@@ -29,9 +29,9 @@ class MovieProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String get error => _error;
 
-  Future<void> searchMovies(String query) async {
+  Future<void> searchMovies(String query, String genreIds) async {
     if (query.isEmpty) {
-      _movies = await _apiService.getAllMovies();
+      _movies = await _apiService.getAllMovies(genreIds: genreIds);
       notifyListeners();
       return;
     }
