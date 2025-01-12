@@ -1,6 +1,6 @@
 // lib/screens/details_screen.dart
 import 'package:flutter/material.dart';
-import 'package:pixup/models/movieModel.dart';
+import 'package:pixup/models/movie.dart';
 import 'package:pixup/services/api_service.dart';
 
 class DetailsScreen extends StatelessWidget {

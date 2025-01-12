@@ -44,8 +44,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
             ),
             borderSide: BorderSide.none,
           ),
-          filled: true,
-          fillColor: Colors.grey[200],
         ),
         onChanged: (value) {
           widget.onSearch(value);

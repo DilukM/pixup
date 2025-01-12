@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pixup/models/genre.dart';
-import 'package:pixup/models/movieModel.dart';
+import 'package:pixup/models/movie.dart';
 
 class ApiService {
   static const String baseUrl = 'https://api.themoviedb.org/3';

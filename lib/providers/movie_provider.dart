@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:pixup/models/movieModel.dart';
+import 'package:pixup/models/movie.dart';
 import '../services/api_service.dart';
 
 class MovieProvider with ChangeNotifier {
