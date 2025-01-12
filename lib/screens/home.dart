@@ -19,15 +19,24 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
+  final ScrollController _scrollController = ScrollController();
   final ApiService apiService = ApiService();
   bool isFilterOn = false;
   List<Genre> genres = [];
   List<Genre> selectedGenres = [];
+  bool showSearchBar = false;
 
   @override
   void initState() {
     super.initState();
     fetchGenres();
+    _scrollController.addListener(_onScroll);
+    _initializeData();
+  }
+
+  Future<void> _initializeData() async {
+    await fetchGenres();
+    context.read<MovieProvider>().searchMovies('', '');
   }
 
   void _showGenreFilter() {
@@ -40,7 +49,6 @@ class _SearchScreenState extends State<SearchScreen> {
           setState(() {
             selectedGenres = newSelection;
           });
-          // Update search with new genres
           context.read<MovieProvider>().searchMovies('', getSelectedGenreIds());
         },
       ),
@@ -62,43 +70,91 @@ class _SearchScreenState extends State<SearchScreen> {
     return selectedGenres.map((genre) => genre.id.toString()).join(',');
   }
 
+  void _onScroll() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      final movieProvider = context.read<MovieProvider>();
+      if (!movieProvider.isLoading && movieProvider.hasMorePages) {
+        movieProvider.loadMoreMovies('', getSelectedGenreIds());
+      }
+    }
+  }
+
+  void _clearSearch() {
+    setState(() {
+      showSearchBar = false;
+      selectedGenres.clear();
+    });
+    context.read<MovieProvider>().searchMovies('', '');
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
         title: Image.asset(
           'assets/images/logo.png',
           width: 100,
         ),
+        actions: [
+          IconButton(
+            icon: Icon(showSearchBar ? Icons.close : Icons.search),
+            onPressed: () {
+              setState(() {
+                if (showSearchBar) {
+                  _clearSearch();
+                } else {
+                  setState(() {
+                    showSearchBar = true;
+                  });
+                }
+              });
+            },
+          ),
+          CircleAvatar(
+            backgroundImage: AssetImage('assets/images/Avatar.png'),
+          ),
+        ],
       ),
       body: Column(
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.8,
-                  child: CustomSearchBar(
-                    onSearch: (query) {
-                      context
-                          .read<MovieProvider>()
-                          .searchMovies(query, getSelectedGenreIds());
-                    },
-                  ),
-                ),
-              ),
-              IconButton(
-                icon: Badge(
-                  isLabelVisible: selectedGenres.isNotEmpty,
-                  label: Text(selectedGenres.length.toString()),
-                  child: const Icon(Icons.tune),
-                ),
-                onPressed: _showGenreFilter,
-              ),
-            ],
+          AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            height: showSearchBar ? 60.0 : 0.0,
+            curve: Curves.easeInOut,
+            child: showSearchBar
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: CustomSearchBar(
+                            onSearch: (query) {
+                              context
+                                  .read<MovieProvider>()
+                                  .searchMovies(query, getSelectedGenreIds());
+                            },
+                          ),
+                        ),
+                        IconButton(
+                          icon: Badge(
+                            isLabelVisible: selectedGenres.isNotEmpty,
+                            label: Text(selectedGenres.length.toString()),
+                            child: const Icon(Icons.tune),
+                          ),
+                          onPressed: _showGenreFilter,
+                        ),
+                      ],
+                    ),
+                  )
+                : const SizedBox.shrink(),
           ),
           if (selectedGenres.isNotEmpty)
             Padding(
@@ -141,6 +197,7 @@ class _SearchScreenState extends State<SearchScreen> {
                 }
 
                 return GridView.builder(
+                  controller: _scrollController,
                   padding: const EdgeInsets.all(16.0),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount:

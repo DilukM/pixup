@@ -2,14 +2,17 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:pixup/models/genre.dart';
 import 'package:pixup/models/movie.dart';
+import 'package:pixup/models/movie_response.dart';
+
+
+
 
 class ApiService {
   static const String baseUrl = 'https://api.themoviedb.org/3';
   static const String apiKey = 'ad6fd113e364ff58fbfd2c8e80545f84';
   static const String imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
 
-
- Future<List<Genre>> getGenres() async {
+  Future<List<Genre>> getGenres() async {
     try {
       final response = await http.get(
         Uri.parse('$baseUrl/genre/movie/list?api_key=$apiKey&language=en'),
@@ -27,16 +30,30 @@ class ApiService {
     }
   }
 
-  Future<List<Movie>> searchMovies(String query) async {
+  Future<MovieResponse> searchMovies(String query, {
+    String genreIds = '',
+    int page = 1,
+  }) async {
     try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/search/movie?api_key=$apiKey&page=2&query=$query'),
+      if (query.isEmpty) {
+        return getAllMovies(genreIds: genreIds, page: page);
+      }
+
+      final Uri uri = Uri.parse('$baseUrl/search/movie').replace(
+        queryParameters: {
+          'api_key': apiKey,
+          'query': query,
+          'with_genres': genreIds,
+          'page': page.toString(),
+          'include_adult': 'false',
+        }..removeWhere((key, value) => value.isEmpty),
       );
+
+      final response = await http.get(uri);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final results = data['results'] as List;
-        return results.map((movie) => Movie.fromJson(movie)).toList();
+        return MovieResponse.fromJson(data);
       } else {
         throw Exception('Failed to search movies');
       }
@@ -45,16 +62,26 @@ class ApiService {
     }
   }
 
-  Future<List<Movie>> getAllMovies({String genreIds = ''}) async {
+  Future<MovieResponse> getAllMovies({
+    String genreIds = '',
+    int page = 1,
+  }) async {
     try {
-      final response = await http.get(
-        Uri.parse('$baseUrl/discover/movie?api_key=$apiKey&with_genres=$genreIds'),
+      final Uri uri = Uri.parse('$baseUrl/discover/movie').replace(
+        queryParameters: {
+          'api_key': apiKey,
+          'with_genres': genreIds,
+          'page': page.toString(),
+          'include_adult': 'false',
+          'sort_by': 'popularity.desc',
+        }..removeWhere((key, value) => value.isEmpty),
       );
+
+      final response = await http.get(uri);
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
-        final results = data['results'] as List;
-        return results.map((movie) => Movie.fromJson(movie)).toList();
+        return MovieResponse.fromJson(data);
       } else {
         throw Exception('Failed to fetch movies');
       }
