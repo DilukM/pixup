@@ -1,10 +1,10 @@
 name: pixup
-description: "A new Flutter project."
-publish_to: 'none'
+description: "PixUp is a movie recommendation app that helps you discover the perfect films for your mood. Curated suggestions, seamless navigation, and a world of cinema at your fingertips."
+publish_to: "none"
 version: 0.1.0
 
 environment:
-  sdk: '>=3.4.1 <4.0.0'
+  sdk: ">=3.4.1 <4.0.0"
 
 dependencies:
   flutter:
@@ -17,3 +17,6 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - assets/images/
