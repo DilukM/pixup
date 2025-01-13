@@ -5,8 +5,7 @@ import 'package:pixup/screens/main_screen.dart';
 import 'package:pixup/util/theme.dart';
 import 'package:provider/provider.dart';
 
-void main() async{
-  await dotenv.load(fileName: ".env");
+void main() {
   runApp(const MainApp());
 }
 
