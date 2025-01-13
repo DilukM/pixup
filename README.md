@@ -43,7 +43,7 @@ PixUp is a movie recommendation app that helps you discover the perfect films fo
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/yourusername/pixup.git
+   git clone https://github.com/DilukM/pixup.git
    cd pixup
    ```
 
@@ -59,14 +59,14 @@ PixUp is a movie recommendation app that helps you discover the perfect films fo
 - Add your TMDB API key to the .env file:
 
   ```sh
-  TMDB_API_KEY=your_api_key_here
+
+  BASE_URL=https://api.themoviedb.org/3
+  API_KEY=your_api_key_here
+  IMAGE_BASE_URL=https://image.tmdb.org/t/p/w500
   ```
 
-4. Configure TMDB API Base URL:
-   - The base URL for TMDB API is: `https://api.themoviedb.org/3`
-   - Example API call format: `https://api.themoviedb.org/3/movie/popular?api_key=your_api_key_here`
 
-5. Run the app:
+4. Run the app:
    ```sh
    flutter run
    ```
