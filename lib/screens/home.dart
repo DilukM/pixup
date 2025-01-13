@@ -3,7 +3,6 @@ import 'package:pixup/models/movie.dart';
 import 'package:pixup/services/api_service.dart';
 import 'package:pixup/widgets/popular_movie_card.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'package:provider/provider.dart';
 import '../providers/movie_provider.dart';
