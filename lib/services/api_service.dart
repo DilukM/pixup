@@ -1,13 +1,14 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:pixup/models/genre.dart';
 import 'package:pixup/models/movie.dart';
 import 'package:pixup/models/movie_response.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://api.themoviedb.org/3';
-  static const String apiKey = 'ad6fd113e364ff58fbfd2c8e80545f84';
-  static const String imageBaseUrl = 'https://image.tmdb.org/t/p/w500';
+  static final String baseUrl = dotenv.env['BASE_URL']!;
+  static final String apiKey = dotenv.env['API_KEY']!;
+  static final String imageBaseUrl = dotenv.env['IMAGE_BASE_URL']!;
 
   Future<List<Genre>> getGenres() async {
     try {
