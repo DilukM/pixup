@@ -14,11 +14,11 @@ PixUp is a movie recommendation app that helps you discover the perfect films fo
 
 1. Clone the repository:
 
-   ````sh
+   ```sh
    git clone https://github.com/yourusername/pixup.git
-   cd pixup```
+   cd pixup
 
-   ````
+   ```
 
 2. Install dependencies:
 
