@@ -43,7 +43,7 @@ PixUp is a movie recommendation app that helps you discover the perfect films fo
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/yourusername/pixup.git
+   git clone https://github.com/DilukM/pixup.git
    cd pixup
    ```
 
