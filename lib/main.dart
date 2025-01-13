@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pixup/providers/movie_provider.dart';
-import 'package:pixup/screens/home.dart';
+import 'package:pixup/screens/main_screen.dart';
 import 'package:pixup/util/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -49,7 +49,7 @@ class MainApp extends StatelessWidget {
             theme: lightTheme,
             darkTheme: darkTheme,
             themeMode: themeProvider.themeMode,
-            home: const SearchScreen(),
+            home: const MainScreen(),
           );
         },
       ),

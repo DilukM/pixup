@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:pixup/models/movie.dart';
 import 'package:pixup/services/api_service.dart';
 
-class MovieCard extends StatelessWidget {
+class PopularMovieCard extends StatelessWidget {
   final Movie movie;
   final VoidCallback onTap;
 
-  const MovieCard({
+  const PopularMovieCard({
     Key? key,
     required this.movie,
     required this.onTap,

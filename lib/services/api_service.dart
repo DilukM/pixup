@@ -4,9 +4,6 @@ import 'package:pixup/models/genre.dart';
 import 'package:pixup/models/movie.dart';
 import 'package:pixup/models/movie_response.dart';
 
-
-
-
 class ApiService {
   static const String baseUrl = 'https://api.themoviedb.org/3';
   static const String apiKey = 'ad6fd113e364ff58fbfd2c8e80545f84';
@@ -30,7 +27,80 @@ class ApiService {
     }
   }
 
-  Future<MovieResponse> searchMovies(String query, {
+  Future<MovieResponse> getPopular() async {
+    try {
+      final Uri uri =
+          Uri.parse('$baseUrl/movie/popular?language=en-US&api_key=$apiKey');
+
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return MovieResponse.fromJson(data);
+      } else {
+        throw Exception('Failed to fetch movies');
+      }
+    } catch (e) {
+      throw Exception('Error fetching movies: $e');
+    }
+  }
+
+  Future<MovieResponse> getTopRated() async {
+    try {
+      final Uri uri =
+          Uri.parse('$baseUrl/movie/top_rated?language=en-US&api_key=$apiKey');
+
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return MovieResponse.fromJson(data);
+      } else {
+        throw Exception('Failed to fetch movies');
+      }
+    } catch (e) {
+      throw Exception('Error fetching movies: $e');
+    }
+  }
+
+  Future<MovieResponse> getUpcoming() async {
+    try {
+      final Uri uri =
+          Uri.parse('$baseUrl/movie/upcoming?language=en-US&api_key=$apiKey');
+
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return MovieResponse.fromJson(data);
+      } else {
+        throw Exception('Failed to fetch movies');
+      }
+    } catch (e) {
+      throw Exception('Error fetching movies: $e');
+    }
+  }
+
+  Future<MovieResponse> getNowPlaying() async {
+    try {
+      final Uri uri = Uri.parse(
+          '$baseUrl/movie/now_playing?language=en-US&api_key=$apiKey');
+
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return MovieResponse.fromJson(data);
+      } else {
+        throw Exception('Failed to fetch movies');
+      }
+    } catch (e) {
+      throw Exception('Error fetching movies: $e');
+    }
+  }
+
+  Future<MovieResponse> searchMovies(
+    String query, {
     String genreIds = '',
     int page = 1,
   }) async {
