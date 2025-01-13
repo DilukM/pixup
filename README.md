@@ -59,7 +59,10 @@ PixUp is a movie recommendation app that helps you discover the perfect films fo
 - Add your TMDB API key to the .env file:
 
   ```sh
-  TMDB_API_KEY=your_api_key_here
+
+  BASE_URL=https://api.themoviedb.org/3
+  API_KEY=your_api_key_here
+  IMAGE_BASE_URL=https://image.tmdb.org/t/p/w500
   ```
 
 4. Configure TMDB API Base URL:
