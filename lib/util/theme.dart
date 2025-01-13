@@ -8,6 +8,7 @@ final ThemeData lightTheme = ThemeData(
   fontFamily: 'Inter',
   primarySwatch: AppColors.primarySwatch,
   unselectedWidgetColor: AppColors.black,
+  scaffoldBackgroundColor: AppColors.white,
   shadowColor: Colors.grey[400],
   colorScheme: ColorScheme.light(
     primary: AppColors.primaryLight,
@@ -38,8 +39,9 @@ final ThemeData lightTheme = ThemeData(
 final ThemeData darkTheme = ThemeData(
   fontFamily: 'Inter',
   primarySwatch: AppColors.primarySwatch,
+  scaffoldBackgroundColor: AppColors.black,
   unselectedWidgetColor: AppColors.white,
-  shadowColor: const Color.fromARGB(255, 24, 24, 24),
+  shadowColor: Color.fromARGB(255, 3, 0, 18),
   colorScheme: ColorScheme.dark(
     primary: AppColors.primaryDark,
     secondary: AppColors.accentDark,

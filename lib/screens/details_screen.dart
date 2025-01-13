@@ -2,6 +2,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:pixup/models/genre.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:pixup/models/movie.dart';
@@ -18,10 +19,31 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen> {
   bool isFavorite = false;
+  List<Genre> genres = [];
+  final ApiService apiService = ApiService();
+
   @override
   void initState() {
     super.initState();
     _checkIfFavorite();
+    fetchGenres();
+  }
+
+  Future<void> fetchGenres() async {
+    try {
+      final fetchedGenres = await apiService.getGenres();
+      setState(() {
+        genres = fetchedGenres;
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  String _getGenreName(int id) {
+    final genre = genres.firstWhere((genre) => genre.id == id,
+        orElse: () => Genre(id: id, name: 'Unknown'));
+    return genre.name;
   }
 
   Future<void> _checkIfFavorite() async {
@@ -55,34 +77,64 @@ class _DetailsScreenState extends State<DetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              SizedBox(
-                width: MediaQuery.of(context).size.width,
-                child: widget.movie.posterPath != null
-                    ? Image.network(
-                        '${ApiService.imageBaseUrl}${widget.movie.posterPath}',
-                        fit: BoxFit.cover,
-                        alignment: Alignment.topCenter,
-                        errorBuilder: (context, error, stackTrace) =>
-                            const Icon(Icons.movie, size: 100),
-                      )
-                    : const Icon(Icons.movie, size: 100),
+              Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    child: widget.movie.posterPath != null
+                        ? Image.network(
+                            '${ApiService.imageBaseUrl}${widget.movie.posterPath}',
+                            fit: BoxFit.cover,
+                            alignment: Alignment.topCenter,
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(Icons.movie, size: 100),
+                          )
+                        : const Icon(Icons.movie, size: 100),
+                  ),
+                  Container(
+                    height: 200,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        stops: const [0, 0.8],
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [
+                          Theme.of(context).scaffoldBackgroundColor,
+                          Colors.transparent
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Padding(
                 padding: EdgeInsets.all(isTablet ? 32.0 : 16.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Text(
+                      widget.movie.title,
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontSize: isTablet ? 32 : 24,
+                              ),
+                    ),
+                    const SizedBox(height: 8.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          widget.movie.title,
-                          style: Theme.of(context)
-                              .textTheme
-                              .headlineSmall
-                              ?.copyWith(
-                                fontSize: isTablet ? 32 : 24,
-                              ),
+                        Row(
+                          children: [
+                            const Icon(Icons.calendar_today, size: 16),
+                            const SizedBox(width: 4.0),
+                            Text(widget.movie.releaseDate.split('-')[0]),
+                            const SizedBox(width: 16.0),
+                            const Icon(Icons.star,
+                                size: 16, color: Colors.amber),
+                            const SizedBox(width: 4.0),
+                            Text('${widget.movie.rating.toStringAsFixed(1)}'),
+                          ],
                         ),
                         IconButton(
                           icon: Icon(
@@ -93,17 +145,25 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8.0),
-                    Row(
-                      children: [
-                        const Icon(Icons.calendar_today, size: 16),
-                        const SizedBox(width: 4.0),
-                        Text(widget.movie.releaseDate),
-                        const SizedBox(width: 16.0),
-                        const Icon(Icons.star, size: 16, color: Colors.amber),
-                        const SizedBox(width: 4.0),
-                        Text('${widget.movie.rating.toStringAsFixed(1)}/10'),
-                      ],
+                    Wrap(
+                      spacing: 8.0,
+                      children: widget.movie.genreIds.map((id) {
+                        return Chip(
+                          shape: StadiumBorder(),
+                          side: BorderSide(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                          backgroundColor: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.2),
+                          label: Text(
+                            _getGenreName(id),
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.primary),
+                          ),
+                        );
+                      }).toList(),
                     ),
                     const SizedBox(height: 16.0),
                     const Text(

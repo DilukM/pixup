@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                     end: Alignment.bottomCenter,
                     colors: [
                       Colors.transparent,
-                      Color.fromARGB(255, 19, 19, 19)
+                      Theme.of(context).scaffoldBackgroundColor,
                     ],
                     stops: [0.6, 1],
                   ),
@@ -217,6 +217,9 @@ class _HomePageState extends State<HomePage> {
                       movies: context.watch<MovieProvider>().UpcomingMovies,
                       scrollController: _upcomingScrollController,
                     ),
+                    SizedBox(
+                      height: 100,
+                    )
                   ],
                 ),
               ),

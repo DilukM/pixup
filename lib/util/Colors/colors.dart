@@ -4,7 +4,7 @@ import 'package:pixup/Util/Colors/hex_to_color.dart';
 @immutable
 class AppColors {
   static const white = const Color(0xFFFFFFFF);
-  static const black = const Color(0xFF000000);
+  static const black = Color.fromARGB(255, 7, 4, 32);
 
   static const MaterialColor primarySwatch = Colors.blue;
   static const MaterialColor primaryDarkSwatch = Colors.blue;
@@ -15,8 +15,8 @@ class AppColors {
   static const Color accentLight = Color.fromARGB(255, 229, 248, 255);
   static const Color accentDark = Color.fromARGB(255, 229, 248, 255);
 
-  static const Color backgroundLight = Color.fromARGB(255, 255, 255, 255);
-  static const Color backgroundDark = Color(0xFF303030);
+  static const Color backgroundLight = Color.fromARGB(255, 248, 248, 248);
+  static const Color backgroundDark = Color.fromARGB(255, 36, 34, 59);
 
   static const Color textLight = Color(0xFF212121);
   static const Color textDark = Color(0xFFE0E0E0);

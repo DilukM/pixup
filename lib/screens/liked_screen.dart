@@ -55,69 +55,125 @@ class _LikedScreenState extends State<LikedScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final isTablet = MediaQuery.of(context).size.width > 600;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Favorite Movies'),
       ),
-      body: ListView.builder(
-        itemCount: favoriteMovies.length,
-        itemBuilder: (context, index) {
-          final movie = favoriteMovies[index];
-          return Container(
-            margin: const EdgeInsets.all(8),
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                if (movie.posterPath != null)
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(12),
-                    child: Image.network(
-                      '${ApiService.imageBaseUrl}${movie.posterPath}',
-                      width: 100,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                const SizedBox(width: 8),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(movie.title,overflow: TextOverflow.ellipsis,),
-                    const SizedBox(height: 8.0),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Wrap(
-                        clipBehavior: Clip.antiAlias,
-                        spacing: 8.0,
-                        children: movie.genreIds.map((id) {
-                          return Chip(
-                            labelPadding: const EdgeInsets.all(0),
-                            label: Text(
-                              _getGenreName(id),
-                              style: TextStyle(fontSize: 10),
+      body: favoriteMovies.isEmpty
+          ? Center(
+              child: Text(
+                'No favorite movies yet.',
+                style: TextStyle(fontSize: 18, color: Colors.grey),
+              ),
+            )
+          : GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: isTablet ? 2 : 1,
+                childAspectRatio: isTablet ? 3 : 3.3,
+                crossAxisSpacing: 8,
+                mainAxisSpacing: 8,
+              ),
+              itemCount: favoriteMovies.length + 1,
+              itemBuilder: (context, index) {
+                if (index == favoriteMovies.length) {
+                  return SizedBox(height: 80);
+                }
+                final movie = favoriteMovies[index];
+                final genreNames =
+                    movie.genreIds.map((id) => _getGenreName(id)).join(', ');
+                return Container(
+                  height: 110,
+                  width: isTablet
+                      ? MediaQuery.of(context).size.width * 0.4
+                      : MediaQuery.of(context).size.width,
+                  margin: const EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Theme.of(context).shadowColor,
+                          spreadRadius: 2,
+                          blurRadius: 5,
+                          offset: const Offset(0, 2),
+                        ),
+                      ]),
+                  child: Row(
+                    children: [
+                      if (movie.posterPath != null)
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Image.network(
+                            '${ApiService.imageBaseUrl}${movie.posterPath}',
+                            width: isTablet
+                                ? MediaQuery.of(context).size.width * 0.13
+                                : MediaQuery.of(context).size.width * 0.25,
+                            height: isTablet
+                                ? MediaQuery.of(context).size.width * 0.13
+                                : MediaQuery.of(context).size.width * 0.25,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      const SizedBox(width: 8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          SizedBox(
+                            width: isTablet
+                                ? MediaQuery.of(context).size.width * 0.32
+                                : MediaQuery.of(context).size.width * 0.65,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  movie.title,
+                                  maxLines: 2,
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  genreNames,
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              ],
                             ),
-                          );
-                        }).toList(),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.star,
+                                      color: Colors.amber, size: 16),
+                                  Text('${movie.rating.toStringAsFixed(1)}'),
+                                ],
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: Text("|"),
+                              ),
+                              Text(
+                                movie.releaseDate.split('-')[0],
+                                style: TextStyle(
+                                  color: Colors.grey[500],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    ),
-                    Text('${movie.rating.toStringAsFixed(1)}'),
-                    Text(
-                      movie.releaseDate.split('-')[0],
-                      style: TextStyle(
-                        color: Colors.grey[500],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                );
+              },
             ),
-          );
-        },
-      ),
     );
   }
 }
