@@ -1,7 +1,3 @@
-I'll help you expand the Setup Instructions to include detailed steps for configuring and obtaining a TMDB API key.
-
-
-
 # PixUp
 
 PixUp is a movie recommendation app that helps you discover the perfect films for your mood. Curated suggestions, seamless navigation, and a world of cinema at your fingertips.
@@ -89,5 +85,3 @@ PixUp is a movie recommendation app that helps you discover the perfect films fo
 - For more details on Flutter development, visit the [official documentation](https://flutter.dev/docs)
 - For TMDB API documentation, visit the [TMDB API Documentation](https://developers.themoviedb.org/3)
 - Rate Limits: TMDB API has a rate limit of 40 requests every 10 seconds
-
-Would you like me to add any other specific API endpoints or configuration details that you're planning to use in the app?
