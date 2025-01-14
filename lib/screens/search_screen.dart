@@ -16,25 +16,28 @@ class SearchScreen extends StatefulWidget {
 }
 
 class _SearchScreenState extends State<SearchScreen> {
-  final ScrollController _scrollController = ScrollController();
-  final ApiService apiService = ApiService();
-  bool isFilterOn = false;
-  List<Genre> genres = [];
-  List<Genre> selectedGenres = [];
-  bool showSearchBar = false;
+  final ScrollController _scrollController =
+      ScrollController(); // Controller for handling scroll events
+  final ApiService apiService =
+      ApiService(); // Instance of ApiService to handle API requests
+  bool isFilterOn = false; // Flag to indicate if the filter is on
+  List<Genre> genres = []; // List of all available genres
+  List<Genre> selectedGenres = []; // List of currently selected genres
+  bool showSearchBar = false; // Flag to indicate if the search bar is visible
 
   @override
   void initState() {
     super.initState();
-    fetchGenres();
-    _scrollController.addListener(_onScroll);
-    _initializeData();
+    fetchGenres(); // Fetch genres when the screen is initialized
+    _scrollController.addListener(_onScroll); // Add scroll listener
+    _initializeData(); // Initialize data
   }
 
   Future<void> _initializeData() async {
-    await fetchGenres();
+    await fetchGenres(); // Fetch genres
     if (mounted) {
-      context.read<MovieProvider>().searchMovies('', '');
+      context.read<MovieProvider>().searchMovies(
+          '', ''); // Search movies with no query and no genre filter
     }
   }
 
@@ -46,9 +49,10 @@ class _SearchScreenState extends State<SearchScreen> {
         selectedGenres: selectedGenres,
         onGenresSelected: (newSelection) {
           setState(() {
-            selectedGenres = newSelection;
+            selectedGenres = newSelection; // Update selected genres
           });
-          context.read<MovieProvider>().searchMovies('', getSelectedGenreIds());
+          context.read<MovieProvider>().searchMovies(
+              '', getSelectedGenreIds()); // Search movies with selected genres
         },
       ),
     );
@@ -56,9 +60,10 @@ class _SearchScreenState extends State<SearchScreen> {
 
   Future<void> fetchGenres() async {
     try {
-      final fetchedGenres = await apiService.getGenres();
+      final fetchedGenres =
+          await apiService.getGenres(); // Fetch genres from API
       setState(() {
-        genres = fetchedGenres;
+        genres = fetchedGenres; // Update genres list
       });
     } catch (e) {
       print(e);
@@ -66,7 +71,9 @@ class _SearchScreenState extends State<SearchScreen> {
   }
 
   String getSelectedGenreIds() {
-    return selectedGenres.map((genre) => genre.id.toString()).join(',');
+    return selectedGenres
+        .map((genre) => genre.id.toString())
+        .join(','); // Get selected genre IDs as a comma-separated string
   }
 
   void _onScroll() {
@@ -74,23 +81,25 @@ class _SearchScreenState extends State<SearchScreen> {
         _scrollController.position.maxScrollExtent - 200) {
       final movieProvider = context.read<MovieProvider>();
       if (!movieProvider.isLoading && movieProvider.hasMorePages) {
-        movieProvider.loadMoreMovies('', getSelectedGenreIds());
+        movieProvider.loadMoreMovies('',
+            getSelectedGenreIds()); // Load more movies when scrolled to the bottom
       }
     }
   }
 
   void _clearSearch() {
     setState(() {
-      showSearchBar = false;
-      selectedGenres.clear();
+      showSearchBar = false; // Hide search bar
+      selectedGenres.clear(); // Clear selected genres
     });
-    context.read<MovieProvider>().searchMovies('', '');
+    context.read<MovieProvider>().searchMovies(
+        '', ''); // Search movies with no query and no genre filter
   }
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
+    _scrollController.removeListener(_onScroll); // Remove scroll listener
+    _scrollController.dispose(); // Dispose scroll controller
     super.dispose();
   }
 
@@ -108,10 +117,11 @@ class _SearchScreenState extends State<SearchScreen> {
             onPressed: () {
               setState(() {
                 if (showSearchBar) {
-                  _clearSearch();
+                  _clearSearch(); // Clear search when close icon is pressed
                 } else {
                   setState(() {
-                    showSearchBar = true;
+                    showSearchBar =
+                        true; // Show search bar when search icon is pressed
                   });
                 }
               });
@@ -136,19 +146,20 @@ class _SearchScreenState extends State<SearchScreen> {
                         Expanded(
                           child: CustomSearchBar(
                             onSearch: (query) {
-                              context
-                                  .read<MovieProvider>()
-                                  .searchMovies(query, getSelectedGenreIds());
+                              context.read<MovieProvider>().searchMovies(query,
+                                  getSelectedGenreIds()); // Search movies with query and selected genres
                             },
                           ),
                         ),
                         IconButton(
                           icon: Badge(
                             isLabelVisible: selectedGenres.isNotEmpty,
-                            label: Text(selectedGenres.length.toString()),
+                            label: Text(selectedGenres.length
+                                .toString()), // Show number of selected genres
                             child: const Icon(Icons.tune),
                           ),
-                          onPressed: _showGenreFilter,
+                          onPressed:
+                              _showGenreFilter, // Show genre filter dialog
                         ),
                       ],
                     ),
@@ -165,14 +176,14 @@ class _SearchScreenState extends State<SearchScreen> {
                     return Padding(
                       padding: const EdgeInsets.only(right: 8.0),
                       child: Chip(
-                        label: Text(genre.name),
+                        label: Text(genre.name), // Display genre name
                         onDeleted: () {
                           setState(() {
-                            selectedGenres.remove(genre);
+                            selectedGenres.remove(
+                                genre); // Remove genre from selected list
                           });
-                          context
-                              .read<MovieProvider>()
-                              .searchMovies('', getSelectedGenreIds());
+                          context.read<MovieProvider>().searchMovies('',
+                              getSelectedGenreIds()); // Search movies with updated selected genres
                         },
                       ),
                     );
@@ -184,23 +195,29 @@ class _SearchScreenState extends State<SearchScreen> {
             child: Consumer<MovieProvider>(
               builder: (context, movieProvider, child) {
                 if (movieProvider.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(
+                      child:
+                          CircularProgressIndicator()); // Show loading indicator
                 }
 
                 if (movieProvider.error.isNotEmpty) {
-                  return Center(child: Text(movieProvider.error));
+                  return Center(
+                      child: Text(movieProvider.error)); // Show error message
                 }
 
                 if (movieProvider.movies.isEmpty) {
-                  return const Center(child: Text('No movies found'));
+                  return const Center(
+                      child: Text(
+                          'No movies found')); // Show message if no movies found
                 }
 
                 return GridView.builder(
                   controller: _scrollController,
                   padding: const EdgeInsets.all(16.0),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:
-                        MediaQuery.of(context).size.width > 600 ? 4 : 2,
+                    crossAxisCount: MediaQuery.of(context).size.width > 600
+                        ? 4
+                        : 2, // Adjust number of columns based on screen width
                     childAspectRatio: 0.7,
                     crossAxisSpacing: 16.0,
                     mainAxisSpacing: 16.0,
@@ -214,7 +231,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DetailsScreen(movie: movie),
+                            builder: (context) => DetailsScreen(
+                                movie: movie), // Navigate to details screen
                           ),
                         );
                       },

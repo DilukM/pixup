@@ -5,11 +5,13 @@ import 'package:pixup/models/genre.dart';
 import 'package:pixup/models/movie.dart';
 import 'package:pixup/models/movie_response.dart';
 
+// ApiService class to handle API requests
 class ApiService {
   static final String baseUrl = "https://api.themoviedb.org/3";
   static final String apiKey = "ad6fd113e364ff58fbfd2c8e80545f84";
   static final String imageBaseUrl = "https://image.tmdb.org/t/p/w500";
 
+  // Method to fetch genres
   Future<List<Genre>> getGenres() async {
     try {
       final response = await http.get(
@@ -28,6 +30,7 @@ class ApiService {
     }
   }
 
+  // Method to fetch popular movies
   Future<MovieResponse> getPopular() async {
     try {
       final Uri uri =
@@ -46,6 +49,7 @@ class ApiService {
     }
   }
 
+  // Method to fetch top-rated movies
   Future<MovieResponse> getTopRated() async {
     try {
       final Uri uri =
@@ -64,6 +68,7 @@ class ApiService {
     }
   }
 
+  // Method to fetch upcoming movies
   Future<MovieResponse> getUpcoming() async {
     try {
       final Uri uri =
@@ -82,6 +87,7 @@ class ApiService {
     }
   }
 
+  // Method to fetch now playing movies
   Future<MovieResponse> getNowPlaying() async {
     try {
       final Uri uri = Uri.parse(
@@ -100,6 +106,7 @@ class ApiService {
     }
   }
 
+  // Method to search for movies
   Future<MovieResponse> searchMovies(
     String query, {
     String genreIds = '',
@@ -133,6 +140,7 @@ class ApiService {
     }
   }
 
+  // Method to fetch all movies with optional filters
   Future<MovieResponse> getAllMovies({
     String genreIds = '',
     int page = 1,

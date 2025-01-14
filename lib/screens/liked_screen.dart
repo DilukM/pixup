@@ -15,22 +15,24 @@ class LikedScreen extends StatefulWidget {
 }
 
 class _LikedScreenState extends State<LikedScreen> {
-  final ApiService apiService = ApiService();
-  List<Movie> favoriteMovies = [];
-  List<Genre> genres = [];
+  final ApiService apiService =
+      ApiService(); // Instance of ApiService to handle API requests
+  List<Movie> favoriteMovies = []; // List of favorite movies
+  List<Genre> genres = []; // List of genres
 
   @override
   void initState() {
     super.initState();
-    _loadFavoriteMovies();
-    fetchGenres();
+    _loadFavoriteMovies(); // Load favorite movies when the screen is initialized
+    fetchGenres(); // Fetch genres when the screen is initialized
   }
 
   Future<void> fetchGenres() async {
     try {
-      final fetchedGenres = await apiService.getGenres();
+      final fetchedGenres =
+          await apiService.getGenres(); // Fetch genres from API
       setState(() {
-        genres = fetchedGenres;
+        genres = fetchedGenres; // Update genres list
       });
     } catch (e) {
       print(e);
@@ -38,19 +40,22 @@ class _LikedScreenState extends State<LikedScreen> {
   }
 
   Future<void> _loadFavoriteMovies() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favoriteMoviesJson = prefs.getStringList('favoriteMovies') ?? [];
+    final prefs = await SharedPreferences
+        .getInstance(); // Get shared preferences instance
+    final favoriteMoviesJson = prefs.getStringList('favoriteMovies') ??
+        []; // Get favorite movies from shared preferences
     setState(() {
       favoriteMovies = favoriteMoviesJson
-          .map((movieJson) => Movie.fromJson(jsonDecode(movieJson)))
+          .map((movieJson) => Movie.fromJson(
+              jsonDecode(movieJson))) // Decode JSON and create Movie objects
           .toList();
     });
   }
 
   String _getGenreName(int id) {
     final genre = genres.firstWhere((genre) => genre.id == id,
-        orElse: () => Genre(id: id, name: 'Unknown'));
-    return genre.name;
+        orElse: () => Genre(id: id, name: 'Unknown')); // Find genre by ID
+    return genre.name; // Return genre name
   }
 
   @override
@@ -77,11 +82,13 @@ class _LikedScreenState extends State<LikedScreen> {
               itemCount: favoriteMovies.length + 1,
               itemBuilder: (context, index) {
                 if (index == favoriteMovies.length) {
-                  return SizedBox(height: 80);
+                  return SizedBox(
+                      height: 80); // Add space at the end of the list
                 }
                 final movie = favoriteMovies[index];
-                final genreNames =
-                    movie.genreIds.map((id) => _getGenreName(id)).join(', ');
+                final genreNames = movie.genreIds
+                    .map((id) => _getGenreName(id))
+                    .join(', '); // Get genre names
                 return Container(
                   height: 110,
                   width: isTablet
@@ -106,7 +113,7 @@ class _LikedScreenState extends State<LikedScreen> {
                         ClipRRect(
                           borderRadius: BorderRadius.circular(12),
                           child: Image.network(
-                            '${ApiService.imageBaseUrl}${movie.posterPath}',
+                            '${ApiService.imageBaseUrl}${movie.posterPath}', // Movie poster URL
                             width: isTablet
                                 ? MediaQuery.of(context).size.width * 0.13
                                 : MediaQuery.of(context).size.width * 0.25,

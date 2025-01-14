@@ -16,26 +16,29 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final ScrollController _popularScrollController = ScrollController();
-  final ScrollController _topRatedScrollController = ScrollController();
-  final ScrollController _nowPlayingScrollController = ScrollController();
-  final ScrollController _upcomingScrollController = ScrollController();
-  final CarouselSliderController _slideController = CarouselSliderController();
-  int _current = 0;
-  final ApiService apiService = ApiService();
+  final ScrollController _popularScrollController = ScrollController();// Controller for popular movies scroll
+  final ScrollController _topRatedScrollController = ScrollController();// Controller for top-rated movies scroll
+  final ScrollController _nowPlayingScrollController = ScrollController();// Controller for now playing movies scroll
+  final ScrollController _upcomingScrollController = ScrollController();// Controller for upcoming movies scroll
+  final CarouselSliderController _slideController = CarouselSliderController();// Controller for carousel slider
+  int _current = 0;// Current index for carousel slider
+  final ApiService apiService = ApiService();// Instance of ApiService to handle API requests
 
   @override
   void initState() {
     super.initState();
-    _popularScrollController.addListener(_onScroll);
-    _topRatedScrollController.addListener(_onScroll);
-    _nowPlayingScrollController.addListener(_onScroll);
-    _upcomingScrollController.addListener(_onScroll);
-    _initializeData();
+    _popularScrollController.addListener(_onScroll);// Add scroll listener for popular movies
+    _topRatedScrollController.addListener(_onScroll);// Add scroll listener for top-rated movies
+    _nowPlayingScrollController.addListener(_onScroll);// Add scroll listener for now playing movies
+    _upcomingScrollController.addListener(_onScroll);// Add scroll listener for upcoming movies
+    _initializeData();// Initialize data
   }
 
   Future<void> _initializeData() async {
-    context.read<MovieProvider>().loadPopularMovies();
+    await context.read<MovieProvider>().loadPopularMovies();// Load popular movies
+    await context.read<MovieProvider>().loadTopRatedMovies();// Load top-rated movies
+    await context.read<MovieProvider>().loadNowPlayinMovies();// Load now playing movies
+    await context.read<MovieProvider>().loadUpcomingMovies();// Load upcoming movies
   }
 
   void _onScroll() {
@@ -43,7 +46,7 @@ class _HomePageState extends State<HomePage> {
         _popularScrollController.position.maxScrollExtent - 200) {
       final movieProvider = context.read<MovieProvider>();
       if (!movieProvider.isLoading && movieProvider.hasMorePages) {
-        movieProvider.loadPopularMovies();
+        movieProvider.loadPopularMovies();// Load more popular movies when scrolled to the bottom
       }
     }
 
@@ -51,7 +54,7 @@ class _HomePageState extends State<HomePage> {
         _topRatedScrollController.position.maxScrollExtent - 200) {
       final movieProvider = context.read<MovieProvider>();
       if (!movieProvider.isLoading && movieProvider.hasMorePages) {
-        movieProvider.loadPopularMovies();
+        movieProvider.loadTopRatedMovies();// Load more top-rated movies when scrolled to the bottom
       }
     }
 
@@ -59,7 +62,7 @@ class _HomePageState extends State<HomePage> {
         _nowPlayingScrollController.position.maxScrollExtent - 200) {
       final movieProvider = context.read<MovieProvider>();
       if (!movieProvider.isLoading && movieProvider.hasMorePages) {
-        movieProvider.loadPopularMovies();
+        movieProvider.loadNowPlayinMovies();// Load more now playing movies when scrolled to the bottom
       }
     }
 
@@ -67,21 +70,21 @@ class _HomePageState extends State<HomePage> {
         _upcomingScrollController.position.maxScrollExtent - 200) {
       final movieProvider = context.read<MovieProvider>();
       if (!movieProvider.isLoading && movieProvider.hasMorePages) {
-        movieProvider.loadPopularMovies();
+        movieProvider.loadUpcomingMovies();// Load more upcoming movies when scrolled to the bottom
       }
     }
   }
 
   @override
   void dispose() {
-    _popularScrollController.removeListener(_onScroll);
-    _topRatedScrollController.removeListener(_onScroll);
-    _nowPlayingScrollController.removeListener(_onScroll);
-    _upcomingScrollController.removeListener(_onScroll);
-    _popularScrollController.dispose();
-    _topRatedScrollController.dispose();
-    _nowPlayingScrollController.dispose();
-    _upcomingScrollController.dispose();
+    _popularScrollController.removeListener(_onScroll); // Remove scroll listener for popular movies
+    _topRatedScrollController.removeListener(_onScroll); // Remove scroll listener for top-rated movies
+    _nowPlayingScrollController.removeListener(_onScroll); // Remove scroll listener for now playing movies
+    _upcomingScrollController.removeListener(_onScroll); // Remove scroll listener for upcoming movies
+    _popularScrollController.dispose(); // Dispose popular movies scroll controller
+    _topRatedScrollController.dispose(); // Dispose top-rated movies scroll controller
+    _nowPlayingScrollController.dispose(); // Dispose now playing movies scroll controller
+    _upcomingScrollController.dispose(); // Dispose upcoming movies scroll controller
     super.dispose();
   }
 
@@ -93,7 +96,7 @@ class _HomePageState extends State<HomePage> {
           Stack(
             children: [
               CarouselSlider(
-                carouselController: _slideController,
+                carouselController: _slideController,// Assign carousel controller
                 options: CarouselOptions(
                   viewportFraction: 1,
                   height: 300.0,
@@ -102,7 +105,7 @@ class _HomePageState extends State<HomePage> {
                   enlargeCenterPage: false,
                   onPageChanged: (index, reason) {
                     setState(() {
-                      _current = index;
+                      _current = index;// Update current index
                     });
                   },
                 ),
@@ -118,7 +121,7 @@ class _HomePageState extends State<HomePage> {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => DetailsScreen(movie: movie),
+                              builder: (context) => DetailsScreen(movie: movie),// Navigate to details screen
                             ),
                           );
                         },
@@ -232,8 +235,8 @@ class _HomePageState extends State<HomePage> {
 
 class MovieSection extends StatelessWidget {
   final String title;
-  final List<Movie> movies;
-  final ScrollController scrollController;
+  final List<Movie> movies;// List of movies in the section
+  final ScrollController scrollController;// Scroll controller for the section
 
   const MovieSection({
     Key? key,
@@ -261,7 +264,7 @@ class MovieSection extends StatelessWidget {
             child: Consumer<MovieProvider>(
               builder: (context, movieProvider, child) {
                 if (movieProvider.isLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());// Show loading indicator
                 }
 
                 if (movieProvider.error.isNotEmpty) {
@@ -292,7 +295,7 @@ class MovieSection extends StatelessWidget {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => DetailsScreen(movie: movie),
+                            builder: (context) => DetailsScreen(movie: movie),// Navigate to details screen
                           ),
                         );
                       },

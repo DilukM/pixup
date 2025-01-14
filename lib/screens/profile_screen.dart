@@ -55,8 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               _buildMenuItem(Icons.help_outline, 'Help'),
               _buildMenuItem(Icons.logout, 'Logout'),
               const SizedBox(
-                  height:
-                      20), // Add some space before the bottom navigation bar
+                  height: 20), //space before the bottom navigation bar
             ],
           ),
         ),
@@ -64,6 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  // Helper method to build menu items
   Widget _buildMenuItem(IconData icon, String title) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),

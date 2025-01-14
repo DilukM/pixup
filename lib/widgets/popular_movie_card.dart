@@ -1,11 +1,11 @@
-// lib/widgets/movie_card.dart
 import 'package:flutter/material.dart';
 import 'package:pixup/models/movie.dart';
 import 'package:pixup/services/api_service.dart';
 
+// PopularMovieCard widget to display a popular movie card
 class PopularMovieCard extends StatelessWidget {
   final Movie movie;
-  final VoidCallback onTap;
+  final VoidCallback onTap; // Callback function when the card is tapped
 
   const PopularMovieCard({
     Key? key,
@@ -21,9 +21,10 @@ class PopularMovieCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12.0),
       ),
       child: InkWell(
-        onTap: onTap,
+        onTap: onTap, // Handle tap event
         child: Stack(
           children: [
+            // Movie poster image
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
@@ -34,6 +35,7 @@ class PopularMovieCard extends StatelessWidget {
                     fit: BoxFit.cover),
               ),
             ),
+            // Gradient overlay
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
@@ -48,6 +50,7 @@ class PopularMovieCard extends StatelessWidget {
                 ),
               ),
             ),
+            // Movie title and release date
             Positioned(
               bottom: 0,
               left: 0,
@@ -69,7 +72,8 @@ class PopularMovieCard extends StatelessWidget {
                     ),
                     const SizedBox(height: 4.0),
                     Text(
-                      movie.releaseDate.split('-')[0],
+                      movie.releaseDate.split(
+                          '-')[0], // Extracting the year from the release date
                       style: TextStyle(
                         color: Colors.grey[500],
                       ),

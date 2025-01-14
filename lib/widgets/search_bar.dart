@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
+// CustomSearchBar widget to handle search input
 class CustomSearchBar extends StatefulWidget {
-  final Function(String) onSearch;
+  final Function(String) onSearch;// Callback function to handle search input
 
   const CustomSearchBar({Key? key, required this.onSearch}) : super(key: key);
 
@@ -16,7 +17,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   void initState() {
     super.initState();
     _controller.addListener(() {
-      setState(() {});
+      setState(() {});// Update the state when the text changes
     });
   }
 
@@ -24,7 +25,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
   Widget build(BuildContext context) {
     return IntrinsicWidth(
       child: TextField(
-        controller: _controller,
+        controller: _controller,// Assigning the controller to the text field
         decoration: InputDecoration(
           hintText: 'Search movies...',
           prefixIcon: const Icon(Icons.search),
@@ -46,7 +47,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
           ),
         ),
         onChanged: (value) {
-          widget.onSearch(value);
+          widget.onSearch(value);// Trigger the search callback with the current input
         },
       ),
     );

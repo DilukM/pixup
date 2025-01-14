@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:pixup/models/genre.dart';
 
 class GenreFilterDialog extends StatefulWidget {
-  final List<Genre> genres;
-  final List<Genre> selectedGenres;
-  final Function(List<Genre>) onGenresSelected;
+  final List<Genre> genres; // List of all available genres
+  final List<Genre> selectedGenres; // List of currently selected genres
+  final Function(List<Genre>)
+      onGenresSelected; // Callback function to handle selected genres
 
   const GenreFilterDialog({
     Key? key,
@@ -18,7 +19,8 @@ class GenreFilterDialog extends StatefulWidget {
 }
 
 class _GenreFilterDialogState extends State<GenreFilterDialog> {
-  late List<Genre> tempSelectedGenres;
+  late List<Genre>
+      tempSelectedGenres; // Temporary list to manage selected genres
 
   @override
   void initState() {
@@ -72,13 +74,15 @@ class _GenreFilterDialogState extends State<GenreFilterDialog> {
                       final isSelected = tempSelectedGenres.contains(genre);
                       return FilterChip(
                         selected: isSelected,
-                        label: Text(genre.name),
+                        label: Text(genre.name), // Display the genre name
                         onSelected: (selected) {
                           setState(() {
                             if (selected) {
-                              tempSelectedGenres.add(genre);
+                              tempSelectedGenres
+                                  .add(genre); // Add genre to the selected list
                             } else {
-                              tempSelectedGenres.remove(genre);
+                              tempSelectedGenres.remove(
+                                  genre); // Remove genre from the selected list
                             }
                           });
                         },
@@ -108,7 +112,7 @@ class _GenreFilterDialogState extends State<GenreFilterDialog> {
                   TextButton(
                     onPressed: () {
                       setState(() {
-                        tempSelectedGenres.clear();
+                        tempSelectedGenres.clear(); // Clear all selected genres
                       });
                     },
                     child: const Text('Clear All'),
@@ -116,8 +120,9 @@ class _GenreFilterDialogState extends State<GenreFilterDialog> {
                   const SizedBox(width: 8),
                   FilledButton(
                     onPressed: () {
-                      widget.onGenresSelected(tempSelectedGenres);
-                      Navigator.pop(context);
+                      widget.onGenresSelected(
+                          tempSelectedGenres); // Apply the selected genres
+                      Navigator.pop(context); // Close the dialog
                     },
                     child: const Text('Apply'),
                   ),

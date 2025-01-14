@@ -1,19 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pixup/providers/movie_provider.dart';
 import 'package:pixup/screens/main_screen.dart';
 import 'package:pixup/util/theme.dart';
 import 'package:provider/provider.dart';
 
+// Main function
 void main() {
   runApp(const MainApp());
 }
 
+// ThemeProvider class to manage theme state
 class ThemeProvider with ChangeNotifier {
   ThemeMode _themeMode = ThemeMode.system;
 
+  // Getter to access the current theme mode
   ThemeMode get themeMode => _themeMode;
 
+  // Method to toggle the theme mode
   void toggleTheme() {
     if (_themeMode == ThemeMode.system) {
       _themeMode = ThemeMode.light;
@@ -39,6 +42,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        // Providing MovieProvider and ThemeProvider to the widget tree
         ChangeNotifierProvider(create: (_) => MovieProvider()),
         ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],

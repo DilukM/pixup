@@ -1,11 +1,11 @@
-// lib/widgets/movie_card.dart
 import 'package:flutter/material.dart';
 import 'package:pixup/models/movie.dart';
 import 'package:pixup/services/api_service.dart';
 
+// MovieCard widget to display a movie card
 class MovieCard extends StatelessWidget {
   final Movie movie;
-  final VoidCallback onTap;
+  final VoidCallback onTap; // Callback function when the card is tapped
 
   const MovieCard({
     Key? key,
@@ -24,6 +24,7 @@ class MovieCard extends StatelessWidget {
         onTap: onTap,
         child: Stack(
           children: [
+            // Movie poster image
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
@@ -34,6 +35,7 @@ class MovieCard extends StatelessWidget {
                     fit: BoxFit.cover),
               ),
             ),
+            // Gradient overlay
             Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
@@ -48,6 +50,7 @@ class MovieCard extends StatelessWidget {
                 ),
               ),
             ),
+            // Movie title and release date
             Positioned(
               bottom: 0,
               left: 0,
@@ -57,6 +60,7 @@ class MovieCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
+                    // Movie title
                     Text(
                       textAlign: TextAlign.center,
                       movie.title,
@@ -68,8 +72,10 @@ class MovieCard extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4.0),
+                    // Movie release year
                     Text(
-                      movie.releaseDate.split('-')[0],
+                      movie.releaseDate.split(
+                          '-')[0], // Extracting the year from the release date
                       style: TextStyle(
                         color: Colors.grey[500],
                       ),

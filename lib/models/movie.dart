@@ -1,3 +1,4 @@
+// Movie class to represent a movie
 class Movie {
   final int id;
   final String title;
@@ -7,6 +8,7 @@ class Movie {
   final List genreIds;
   final double rating;
 
+  // Constructor to initialize the Movie object
   Movie({
     required this.id,
     required this.title,
@@ -17,6 +19,7 @@ class Movie {
     required this.rating,
   });
 
+// Method to convert Movie object to JSON
   Map<String, dynamic> toJson() => {
         'id': id,
         'title': title,
@@ -27,6 +30,7 @@ class Movie {
         'genre_ids': genreIds,
       };
 
+  // Factory method to create a Movie object from JSON data
   factory Movie.fromJson(Map<String, dynamic> json) {
     return Movie(
       id: json['id'],

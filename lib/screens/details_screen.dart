@@ -9,7 +9,7 @@ import 'package:pixup/models/movie.dart';
 import 'package:pixup/services/api_service.dart';
 
 class DetailsScreen extends StatefulWidget {
-  final Movie movie;
+  final Movie movie; // Movie object passed to the screen
 
   const DetailsScreen({Key? key, required this.movie}) : super(key: key);
 
@@ -18,53 +18,63 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-  bool isFavorite = false;
-  List<Genre> genres = [];
-  final ApiService apiService = ApiService();
+  bool isFavorite = false; // Flag to indicate if the movie is a favorite
+  List<Genre> genres = []; // List of genres
+  final ApiService apiService =
+      ApiService(); // Instance of ApiService to handle API requests
 
   @override
   void initState() {
     super.initState();
-    _checkIfFavorite();
-    fetchGenres();
+    _checkIfFavorite(); // Check if the movie is a favorite
+    fetchGenres(); // Fetch genres
   }
 
   Future<void> fetchGenres() async {
     try {
-      final fetchedGenres = await apiService.getGenres();
+      final fetchedGenres =
+          await apiService.getGenres(); // Fetch genres from API
       setState(() {
-        genres = fetchedGenres;
+        genres = fetchedGenres; // Update genres list
       });
     } catch (e) {
-      print(e);
+      print(e); // Print error if fetching genres fails
     }
   }
 
   String _getGenreName(int id) {
     final genre = genres.firstWhere((genre) => genre.id == id,
-        orElse: () => Genre(id: id, name: 'Unknown'));
-    return genre.name;
+        orElse: () => Genre(id: id, name: 'Unknown')); // Find genre by ID
+    return genre.name; // Return genre name
   }
 
   Future<void> _checkIfFavorite() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favoriteMovies = prefs.getStringList('favoriteMovies') ?? [];
+    final prefs = await SharedPreferences
+        .getInstance(); // Get shared preferences instance
+    final favoriteMovies = prefs.getStringList('favoriteMovies') ??
+        []; // Get favorite movies from shared preferences
     setState(() {
-      isFavorite = favoriteMovies.contains(jsonEncode(widget.movie.toJson()));
+      isFavorite = favoriteMovies.contains(jsonEncode(
+          widget.movie.toJson())); // Check if the movie is a favorite
     });
   }
 
   Future<void> _toggleFavorite() async {
-    final prefs = await SharedPreferences.getInstance();
-    final favoriteMovies = prefs.getStringList('favoriteMovies') ?? [];
+    final prefs = await SharedPreferences
+        .getInstance(); // Get shared preferences instance
+    final favoriteMovies = prefs.getStringList('favoriteMovies') ??
+        []; // Get favorite movies from shared preferences
     if (isFavorite) {
-      favoriteMovies.remove(jsonEncode(widget.movie.toJson()));
+      favoriteMovies.remove(
+          jsonEncode(widget.movie.toJson())); // Remove movie from favorites
     } else {
-      favoriteMovies.add(jsonEncode(widget.movie.toJson()));
+      favoriteMovies
+          .add(jsonEncode(widget.movie.toJson())); // Add movie to favorites
     }
-    await prefs.setStringList('favoriteMovies', favoriteMovies);
+    await prefs.setStringList(
+        'favoriteMovies', favoriteMovies); // Save updated favorites list
     setState(() {
-      isFavorite = !isFavorite;
+      isFavorite = !isFavorite; // Toggle favorite status
     });
   }
 
@@ -141,7 +151,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             isFavorite ? Icons.favorite : Icons.favorite_border,
                             color: isFavorite ? Colors.red : null,
                           ),
-                          onPressed: _toggleFavorite,
+                          onPressed: _toggleFavorite, // Toggle favorite status
                         ),
                       ],
                     ),
@@ -202,7 +212,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               color: Colors.white,
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context); // Navigate back
             },
           ),
         ),
