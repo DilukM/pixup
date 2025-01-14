@@ -7,9 +7,9 @@ import 'package:pixup/models/movie_response.dart';
 
 // ApiService class to handle API requests
 class ApiService {
-  static final String baseUrl = "https://api.themoviedb.org/3";
-  static final String apiKey = "ad6fd113e364ff58fbfd2c8e80545f84";
-  static final String imageBaseUrl = "https://image.tmdb.org/t/p/w500";
+    static final String baseUrl = dotenv.env['BASE_URL']!;
+  static final String apiKey = dotenv.env['API_KEY']!;
+  static final String imageBaseUrl = dotenv.env['IMAGE_BASE_URL']!;
 
   // Method to fetch genres
   Future<List<Genre>> getGenres() async {

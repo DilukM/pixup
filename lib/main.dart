@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pixup/providers/movie_provider.dart';
 import 'package:pixup/screens/main_screen.dart';
 import 'package:pixup/util/theme.dart';
 import 'package:provider/provider.dart';
 
 // Main function
-void main() {
+void main() async {
+  await dotenv.load(fileName: ".env");
   runApp(const MainApp());
 }
 
